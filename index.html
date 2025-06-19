@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Flashcards</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Gestor de Flashcards</h1>
+
+    <form id="flashcard-form">
+        <label for="type">Tipo de tarjeta:</label>
+        <select id="type" name="type">
+            <option value="classic">Clásica</option>
+            <option value="tf">Falso/Verdadero</option>
+        </select>
+        <div id="dynamic-fields"><!-- Campos dinámicos se insertarán aquí --></div>
+        <button type="submit">Guardar tarjeta</button>
+    </form>
+
+    <h2>Listado de Flashcards</h2>
+    <ul id="flashcard-list"></ul>
+
+    <script src="script.js"></script>
+</body>
+</html>
