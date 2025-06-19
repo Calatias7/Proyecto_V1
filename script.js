@@ -8,6 +8,9 @@ function saveFlashcards(cards) {
     localStorage.setItem('flashcards', JSON.stringify(cards));
 }
 
+// Índice de tarjeta en modo edición, null si se está creando una nueva
+let editingIndex = null;
+
 // Renderiza el formulario según el tipo de tarjeta seleccionado
 function renderFields(type) {
     const container = document.getElementById('dynamic-fields');
@@ -48,7 +51,14 @@ function addFlashcard(event) {
         card = { type, statement, isTrue };
     }
 
-    cards.push(card);
+    if (editingIndex !== null) {
+        // Si estamos editando, reemplazamos la tarjeta existente
+        cards[editingIndex] = card;
+        editingIndex = null;
+    } else {
+        // Si no, agregamos una nueva
+        cards.push(card);
+    }
     saveFlashcards(cards);
     renderList();
     event.target.reset();
@@ -61,6 +71,29 @@ function deleteFlashcard(index) {
     cards.splice(index, 1);
     saveFlashcards(cards);
     renderList();
+}
+
+// Carga una tarjeta en el formulario para editarla
+function editFlashcard(index) {
+    const cards = loadFlashcards();
+    const card = cards[index];
+    if (!card) return;
+
+    // Establece el tipo y dibuja los campos correspondientes
+    const typeSelect = document.getElementById('type');
+    typeSelect.value = card.type;
+    renderFields(card.type);
+
+    if (card.type === 'classic') {
+        document.getElementById('question').value = card.question;
+        document.getElementById('answer').value = card.answer;
+    } else {
+        document.getElementById('statement').value = card.statement;
+        document.getElementById('isTrue').checked = card.isTrue;
+    }
+
+    // Guardamos el índice en edición
+    editingIndex = index;
 }
 
 // Muestra todas las tarjetas en el listado
@@ -79,11 +112,18 @@ function renderList() {
             li.innerHTML = `<strong>Enunciado:</strong> ${card.statement}<br>` +
                            `<strong>Es verdadero:</strong> ${card.isTrue ? 'Sí' : 'No'}`;
         }
-        const btn = document.createElement('button');
-        btn.textContent = 'Eliminar';
-        btn.addEventListener('click', () => deleteFlashcard(index));
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Eliminar';
+        deleteBtn.addEventListener('click', () => deleteFlashcard(index));
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Editar';
+        editBtn.style.marginLeft = '0.5rem';
+        editBtn.addEventListener('click', () => editFlashcard(index));
+
         li.appendChild(document.createElement('br'));
-        li.appendChild(btn);
+        li.appendChild(deleteBtn);
+        li.appendChild(editBtn);
         list.appendChild(li);
     });
 }
