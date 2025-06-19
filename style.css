@@ -46,3 +46,12 @@ button {
 .flashcard button {
     margin-top: 1rem;
 }
+
+#deck-controls {
+    margin-bottom: 1rem;
+}
+
+#deck-controls select,
+#deck-controls button {
+    margin-right: 0.5rem;
+}
