@@ -78,6 +78,20 @@ function deleteFlashcard(index) {
     renderList();
 }
 
+// Borra todas las tarjetas almacenadas
+function clearAllFlashcards() {
+    localStorage.removeItem('flashcards');
+    renderList();
+}
+
+// Habilita o deshabilita el botón "Eliminar todas" según haya tarjetas
+function updateClearButton() {
+    const btn = document.getElementById('clear-all');
+    if (btn) {
+        btn.disabled = loadFlashcards().length === 0;
+    }
+}
+
 // Carga una tarjeta en el formulario para editarla
 function editFlashcard(index) {
     const cards = loadFlashcards();
@@ -110,13 +124,31 @@ function renderList() {
     cards.forEach((card, index) => {
         const li = document.createElement('li');
         li.className = 'flashcard';
+
         if (card.type === 'classic') {
-            li.innerHTML = `<strong>Pregunta:</strong> ${card.question}<br>` +
-                           `<strong>Respuesta:</strong> ${card.answer}`;
+            const qLabel = document.createElement('strong');
+            qLabel.textContent = 'Pregunta:';
+            li.appendChild(qLabel);
+            li.appendChild(document.createTextNode(' ' + card.question));
+            li.appendChild(document.createElement('br'));
+
+            const aLabel = document.createElement('strong');
+            aLabel.textContent = 'Respuesta:';
+            li.appendChild(aLabel);
+            li.appendChild(document.createTextNode(' ' + card.answer));
         } else {
-            li.innerHTML = `<strong>Enunciado:</strong> ${card.statement}<br>` +
-                           `<strong>Es verdadero:</strong> ${card.isTrue ? 'Sí' : 'No'}`;
+            const sLabel = document.createElement('strong');
+            sLabel.textContent = 'Enunciado:';
+            li.appendChild(sLabel);
+            li.appendChild(document.createTextNode(' ' + card.statement));
+            li.appendChild(document.createElement('br'));
+
+            const tLabel = document.createElement('strong');
+            tLabel.textContent = 'Es verdadero:';
+            li.appendChild(tLabel);
+            li.appendChild(document.createTextNode(' ' + (card.isTrue ? 'Sí' : 'No')));
         }
+
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Eliminar';
         deleteBtn.addEventListener('click', () => deleteFlashcard(index));
@@ -131,6 +163,8 @@ function renderList() {
         li.appendChild(editBtn);
         list.appendChild(li);
     });
+
+    updateClearButton();
 }
 
 // Configura eventos iniciales
@@ -139,6 +173,10 @@ function init() {
     renderFields(typeSelect.value);
     typeSelect.addEventListener('change', (e) => renderFields(e.target.value));
     document.getElementById('flashcard-form').addEventListener('submit', addFlashcard);
+    const clearBtn = document.getElementById('clear-all');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearAllFlashcards);
+    }
     renderList();
 }
 
