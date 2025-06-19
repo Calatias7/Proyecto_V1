@@ -52,10 +52,10 @@ function addFlashcard(event) {
     saveFlashcards(cards);
     renderList();
     event.target.reset();
-    renderFields(type); // Reiniciar campos segÃºn tipo
+    renderFields(type); // Reiniciar campos según tipo
 }
 
-// Elimina una tarjeta por Ã­ndice
+// Elimina una tarjeta por índice
 function deleteFlashcard(index) {
     const cards = loadFlashcards();
     cards.splice(index, 1);
