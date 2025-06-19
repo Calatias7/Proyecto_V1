@@ -46,3 +46,17 @@ button {
 .flashcard button {
     margin-top: 1rem;
 }
+.flashcard.classic {
+    border-left: 5px solid #4caf50;
+}
+
+.flashcard.tf {
+    border-left: 5px solid #2196f3;
+}
+
+#study-card {
+    text-align: center;
+    font-size: 1.2rem;
+    min-height: 4rem;
+    margin-bottom: 1rem;
+}

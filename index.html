@@ -19,8 +19,29 @@
         <button type="submit">Guardar tarjeta</button>
     </form>
 
+    <div id="tools">
+        <label for="search">Buscar:</label>
+        <input type="text" id="search">
+        <label for="filter-type">Filtrar:</label>
+        <select id="filter-type">
+            <option value="all">Todas</option>
+            <option value="classic">Clásica</option>
+            <option value="tf">Falso/Verdadero</option>
+        </select>
+        <button type="button" id="clear-cards">Eliminar todas</button>
+        <button type="button" id="export-cards">Exportar JSON</button>
+    </div>
+
     <h2>Listado de Flashcards</h2>
     <ul id="flashcard-list"></ul>
+
+    <h2>Modo de estudio</h2>
+    <div id="study">
+        <div id="study-card" class="flashcard"></div>
+        <button type="button" id="prev-card">Anterior</button>
+        <button type="button" id="flip-card">Voltear</button>
+        <button type="button" id="next-card">Siguiente</button>
+    </div>
 
     <script src="script.js"></script>
 </body>
