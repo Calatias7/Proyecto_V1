@@ -17,13 +17,14 @@ Para probar la aplicación solo abre `index.html` en tu navegador.
 
 ## Instalación
 
-Puedes usar un servidor estático para ejecutar la aplicación de forma local. Si tienes Node.js instalado, una opción sencilla es `npx serve`:
+Instala las dependencias del proyecto y ejecuta el servidor incluido con los siguientes comandos:
 
 ```bash
-npx serve
+npm install
+npm start
 ```
 
-Abre el navegador en la dirección que indique la terminal para acceder a la app.
+Esto iniciará `serve` sobre la carpeta actual. Abre el navegador en la dirección que indique la terminal para acceder a la app.
 
 ## Licencia
 
