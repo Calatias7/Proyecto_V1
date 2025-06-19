@@ -78,6 +78,20 @@ function deleteFlashcard(index) {
     renderList();
 }
 
+// Borra todas las tarjetas almacenadas
+function clearAllFlashcards() {
+    localStorage.removeItem('flashcards');
+    renderList();
+}
+
+// Habilita o deshabilita el botón "Eliminar todas" según haya tarjetas
+function updateClearButton() {
+    const btn = document.getElementById('clear-all');
+    if (btn) {
+        btn.disabled = loadFlashcards().length === 0;
+    }
+}
+
 // Carga una tarjeta en el formulario para editarla
 function editFlashcard(index) {
     const cards = loadFlashcards();
@@ -149,6 +163,8 @@ function renderList() {
         li.appendChild(editBtn);
         list.appendChild(li);
     });
+
+    updateClearButton();
 }
 
 // Configura eventos iniciales
@@ -157,6 +173,10 @@ function init() {
     renderFields(typeSelect.value);
     typeSelect.addEventListener('change', (e) => renderFields(e.target.value));
     document.getElementById('flashcard-form').addEventListener('submit', addFlashcard);
+    const clearBtn = document.getElementById('clear-all');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearAllFlashcards);
+    }
     renderList();
 }
 
