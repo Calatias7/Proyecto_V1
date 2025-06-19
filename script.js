@@ -1,7 +1,12 @@
 // Utilidades para acceder a localStorage
 function loadFlashcards() {
     const data = localStorage.getItem('flashcards');
-    return data ? JSON.parse(data) : [];
+    if (!data) return [];
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        return [];
+    }
 }
 
 function saveFlashcards(cards) {
