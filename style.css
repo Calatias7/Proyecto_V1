@@ -286,6 +286,9 @@ button:hover {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     backface-visibility: hidden;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: pre-wrap;
 }
 
 .flashcard .back {
