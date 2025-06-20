@@ -1,3 +1,5 @@
+import { loadFlashcards, saveFlashcards } from './storage.js';
+
 export function loadDecks() {
     const data = localStorage.getItem('decks');
     if (!data) return ['General'];
@@ -37,4 +39,17 @@ export function addDeck() {
     input.value = '';
     renderDeckOptions();
     document.getElementById('deck').value = name;
+}
+
+export function deleteDeck() {
+    const select = document.getElementById('deck');
+    const deck = select.value;
+    if (!deck || !confirm(`¿Eliminar el mazo "${deck}" y sus tarjetas?`)) return;
+    let decks = loadDecks().filter(d => d !== deck);
+    if (!decks.length) decks = ['General'];
+    saveDecks(decks);
+    const cards = loadFlashcards().filter(c => c.deck !== deck);
+    saveFlashcards(cards);
+    renderDeckOptions();
+    select.value = decks[0];
 }

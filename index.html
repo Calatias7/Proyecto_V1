@@ -9,6 +9,7 @@
 <body>
     <div class="container">
     <h1>Gestor de Flashcards</h1>
+    <button id="toggle-theme" type="button">Tema oscuro</button>
 
     <form id="flashcard-form">
         <label for="type">Tipo de tarjeta:</label>
@@ -21,6 +22,7 @@
         <div class="new-deck">
             <input type="text" id="new-deck" placeholder="Nuevo mazo">
             <button type="button" id="add-deck">Añadir</button>
+            <button type="button" id="delete-deck">Eliminar mazo</button>
         </div>
         <div id="dynamic-fields"><!-- Campos dinámicos se insertarán aquí --></div>
         <button type="submit">Guardar tarjeta</button>
@@ -28,7 +30,9 @@
 
     <h2>Listado de Flashcards</h2>
     <button id="clear-all">Eliminar todas</button>
+    <button id="study-mode">Iniciar estudio</button>
     <ul id="flashcard-list"></ul>
+    <div id="study-container" class="hidden"></div>
     </div>
     <script type="module" src="src/app.js"></script>
 </body>
