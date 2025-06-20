@@ -21,13 +21,29 @@ Al usar módulos ES no es posible abrir `index.html` directamente.
 
 ## Instalación
 
-Instala Node.js y ejecuta el servidor integrado con:
+Instala Node.js y las dependencias del proyecto:
+
+```bash
+npm install
+```
+
+## Ejecutar el servidor
+
+Inicia el servidor integrado con:
 
 ```bash
 npm start
 ```
 
-El proyecto no requiere dependencias externas. El comando anterior iniciará un pequeño servidor en `http://localhost:3000`.
+El comando anterior iniciará un pequeño servidor en `http://localhost:3000`.
+
+## Ejecutar las pruebas
+
+Las pruebas se ejecutan con el test runner de Node.js:
+
+```bash
+npm test
+```
 
 ## Uso
 
@@ -45,6 +61,6 @@ Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` 
 
 ## Contribuciones
 
-¡Las contribuciones son bienvenidas! Si encuentras un problema o quieres proponer una mejora, abre un *issue* o envía un *pull request* siguiendo el flujo estándar de GitHub.
+¡Las contribuciones son bienvenidas! Si encuentras un problema o quieres proponer una mejora, abre una *issue* o envía un *pull request* siguiendo el flujo estándar de GitHub. Recuerda ejecutar `npm test` antes de enviar tu propuesta.
 
 
