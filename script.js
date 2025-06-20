@@ -1,37 +1,20 @@
-// ----- Gestión de mazos -----
-function loadDecks() {
-    const data = localStorage.getItem('decks');
-    if (!data) return [{ name: 'Mazo 1', cards: [] }];
+// Utilidades para acceder a localStorage
+function loadFlashcards() {
+    const data = localStorage.getItem('flashcards');
+    if (!data) return [];
     try {
-        const decks = JSON.parse(data);
-        if (Array.isArray(decks) && decks.length > 0) {
-            return decks;
-        }
-        return [{ name: 'Mazo 1', cards: [] }];
+        return JSON.parse(data);
     } catch (e) {
-        return [{ name: 'Mazo 1', cards: [] }];
+        return [];
     }
 }
 
-function saveDecks(decks) {
-    localStorage.setItem('decks', JSON.stringify(decks));
-}
-
-let currentDeckIndex = 0;
-let editingIndex = null; // Índice de tarjeta en modo edición, null si nueva
-
-function loadFlashcards() {
-    const decks = loadDecks();
-    const deck = decks[currentDeckIndex] || { cards: [] };
-    return deck.cards;
-}
-
 function saveFlashcards(cards) {
-    const decks = loadDecks();
-    if (!decks[currentDeckIndex]) return;
-    decks[currentDeckIndex].cards = cards;
-    saveDecks(decks);
+    localStorage.setItem('flashcards', JSON.stringify(cards));
 }
+
+// Índice de tarjeta en modo edición, null si se está creando una nueva
+let editingIndex = null;
 
 // Renderiza el formulario según el tipo de tarjeta seleccionado
 function renderFields(type) {
@@ -97,10 +80,7 @@ function deleteFlashcard(index) {
 
 // Borra todas las tarjetas almacenadas
 function clearAllFlashcards() {
-    const decks = loadDecks();
-    if (!decks[currentDeckIndex]) return;
-    decks[currentDeckIndex].cards = [];
-    saveDecks(decks);
+    localStorage.removeItem('flashcards');
     renderList();
 }
 
@@ -110,61 +90,6 @@ function updateClearButton() {
     if (btn) {
         btn.disabled = loadFlashcards().length === 0;
     }
-}
-
-// ----- Funciones para manejar mazos -----
-function renderDeckOptions() {
-    const select = document.getElementById('deck-select');
-    if (!select) return;
-    const decks = loadDecks();
-    select.innerHTML = '';
-    decks.forEach((deck, idx) => {
-        const opt = document.createElement('option');
-        opt.value = idx;
-        opt.textContent = deck.name;
-        select.appendChild(opt);
-    });
-    select.value = currentDeckIndex;
-}
-
-function createDeck() {
-    const name = prompt('Nombre del mazo:');
-    if (!name) return;
-    const decks = loadDecks();
-    decks.push({ name: name.trim(), cards: [] });
-    currentDeckIndex = decks.length - 1;
-    saveDecks(decks);
-    renderDeckOptions();
-    renderList();
-}
-
-function renameDeck() {
-    const decks = loadDecks();
-    const deck = decks[currentDeckIndex];
-    if (!deck) return;
-    const name = prompt('Nuevo nombre del mazo:', deck.name);
-    if (!name) return;
-    deck.name = name.trim();
-    saveDecks(decks);
-    renderDeckOptions();
-}
-
-function deleteDeck() {
-    const decks = loadDecks();
-    if (decks.length <= 1) return;
-    if (!confirm('¿Eliminar este mazo?')) return;
-    decks.splice(currentDeckIndex, 1);
-    if (currentDeckIndex >= decks.length) {
-        currentDeckIndex = decks.length - 1;
-    }
-    saveDecks(decks);
-    renderDeckOptions();
-    renderList();
-}
-
-function handleDeckChange(e) {
-    currentDeckIndex = parseInt(e.target.value, 10) || 0;
-    renderList();
 }
 
 // Carga una tarjeta en el formulario para editarla
@@ -252,25 +177,6 @@ function init() {
     if (clearBtn) {
         clearBtn.addEventListener('click', clearAllFlashcards);
     }
-
-    renderDeckOptions();
-    const deckSelect = document.getElementById('deck-select');
-    if (deckSelect) {
-        deckSelect.addEventListener('change', handleDeckChange);
-    }
-    const addDeckBtn = document.getElementById('add-deck');
-    if (addDeckBtn) {
-        addDeckBtn.addEventListener('click', createDeck);
-    }
-    const renameDeckBtn = document.getElementById('rename-deck');
-    if (renameDeckBtn) {
-        renameDeckBtn.addEventListener('click', renameDeck);
-    }
-    const deleteDeckBtn = document.getElementById('delete-deck');
-    if (deleteDeckBtn) {
-        deleteDeckBtn.addEventListener('click', deleteDeck);
-    }
-
     renderList();
 }
 
