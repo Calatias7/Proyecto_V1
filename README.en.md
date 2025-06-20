@@ -14,8 +14,8 @@ Cards are stored in `localStorage` so they persist between page reloads.
 - `style.css` visual appearance.
 - `src/app.js` main logic plus storage and deck modules.
 
-To test the application you must run a local server (for example `npm start`).
-Because the project uses ES Modules, you cannot open `index.html` directly.
+You can run the application by simply opening `index.html` in your browser.
+Alternatively you can start the included server with `npm start`.
 
 ## Installation
 
