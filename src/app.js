@@ -112,10 +112,18 @@ function addFlashcard(event) {
     if (type === 'classic') {
         const question = document.getElementById('question').value.trim();
         const answer = document.getElementById('answer').value.trim();
+        if (!question || !answer) {
+            alert('Completa pregunta y respuesta');
+            return;
+        }
         card = { type, deck, question, answer };
     } else {
         const statement = document.getElementById('statement').value.trim();
         const isTrue = document.getElementById('isTrue').checked;
+        if (!statement) {
+            alert('Completa el enunciado');
+            return;
+        }
         card = { type, deck, statement, isTrue };
     }
 
@@ -199,6 +207,10 @@ function showStudyCard() {
     const progress = document.createElement('p');
     progress.textContent = `Tarjeta ${studyIndex + 1} de ${studyQueue.length}`;
     container.appendChild(progress);
+    const bar = document.createElement('progress');
+    bar.max = studyQueue.length;
+    bar.value = studyIndex;
+    container.appendChild(bar);
     const front = document.createElement('div');
     front.textContent = card.type === 'classic' ? card.question : card.statement;
     const showBtn = document.createElement('button');
@@ -329,17 +341,20 @@ function renderList() {
             const tarjeta = document.createElement('div');
             tarjeta.className = 'tarjeta';
 
-            const contenido = document.createElement('p');
-            contenido.className = 'contenido';
-            if (card.type === 'classic') {
-                const q = escapeHTML(card.question);
-                const a = escapeHTML(card.answer);
-                contenido.innerHTML = `<strong>Pregunta:</strong> ${q}<br><strong>Respuesta:</strong> ${a}`;
-            } else {
-                const resp = card.isTrue ? 'Verdadero' : 'Falso';
-                const st = escapeHTML(card.statement);
-                contenido.innerHTML = `<strong>Enunciado:</strong> ${st}<br><strong>Respuesta:</strong> ${resp}`;
-            }
+            const flash = document.createElement('div');
+            flash.className = 'flashcard';
+            const inner = document.createElement('div');
+            inner.className = 'card-inner';
+            const front = document.createElement('div');
+            front.className = 'front';
+            front.textContent = card.type === 'classic' ? card.question : card.statement;
+            const back = document.createElement('div');
+            back.className = 'back';
+            back.textContent = card.type === 'classic' ? card.answer : (card.isTrue ? 'Verdadero' : 'Falso');
+            inner.appendChild(front);
+            inner.appendChild(back);
+            flash.appendChild(inner);
+            flash.addEventListener('click', () => flash.classList.toggle('flipped'));
 
             const botones = document.createElement('div');
             botones.className = 'botones';
@@ -357,7 +372,7 @@ function renderList() {
             botones.appendChild(editBtn);
             botones.appendChild(deleteBtn);
 
-            tarjeta.appendChild(contenido);
+            tarjeta.appendChild(flash);
             tarjeta.appendChild(botones);
             li.appendChild(tarjeta);
             ul.appendChild(li);
@@ -424,17 +439,20 @@ function mostrarTarjetasDelMazo(nombreDelMazo) {
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta';
 
-        const contenido = document.createElement('p');
-        contenido.className = 'contenido';
-        if(card.type==='classic'){
-            const q = escapeHTML(card.question);
-            const a = escapeHTML(card.answer);
-            contenido.innerHTML = `<strong>Pregunta:</strong> ${q}<br><strong>Respuesta:</strong> ${a}`;
-        } else {
-            const resp = card.isTrue ? 'Verdadero' : 'Falso';
-            const st = escapeHTML(card.statement);
-            contenido.innerHTML = `<strong>Enunciado:</strong> ${st}<br><strong>Respuesta:</strong> ${resp}`;
-        }
+        const flash = document.createElement('div');
+        flash.className = 'flashcard';
+        const inner = document.createElement('div');
+        inner.className = 'card-inner';
+        const front = document.createElement('div');
+        front.className = 'front';
+        front.textContent = card.type==='classic' ? card.question : card.statement;
+        const back = document.createElement('div');
+        back.className = 'back';
+        back.textContent = card.type==='classic' ? card.answer : (card.isTrue ? 'Verdadero' : 'Falso');
+        inner.appendChild(front);
+        inner.appendChild(back);
+        flash.appendChild(inner);
+        flash.addEventListener('click', ()=> flash.classList.toggle('flipped'));
 
         const botones = document.createElement('div');
         botones.className = 'botones';
@@ -452,7 +470,7 @@ function mostrarTarjetasDelMazo(nombreDelMazo) {
         botones.appendChild(editBtn);
         botones.appendChild(delBtn);
 
-        tarjeta.appendChild(contenido);
+        tarjeta.appendChild(flash);
         tarjeta.appendChild(botones);
         li.appendChild(tarjeta);
         list.appendChild(li);
