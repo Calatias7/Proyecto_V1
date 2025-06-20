@@ -1,4 +1,5 @@
 # Proyecto_V1
+Para una versión en inglés consulta [README.en.md](README.en.md).
 
 Esta es una aplicación web sencilla para gestionar flashcards sin utilizar frameworks. Ahora permite agrupar las tarjetas en **mazos** y crear dos tipos de tarjetas:
 

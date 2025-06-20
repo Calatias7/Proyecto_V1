@@ -1,5 +1,5 @@
 import { loadFlashcards, saveFlashcards } from './storage.js';
-import { loadDecks, saveDecks, renderDeckOptions, addDeck } from './decks.js';
+import { loadDecks, saveDecks, renderDeckOptions, addDeck, deleteDeck } from './decks.js';
 
 // Índice de tarjeta en modo edición, null si se está creando una nueva
 let editingIndex = null;
@@ -55,6 +55,7 @@ function addFlashcard(event) {
     renderList();
     event.target.reset();
     document.getElementById('type').value = type;
+    document.getElementById('deck').value = deck;
     renderFields(type);
 }
 
@@ -79,6 +80,75 @@ function updateClearButton() {
     if (btn) {
         btn.disabled = loadFlashcards().length === 0;
     }
+}
+
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('dark');
+    const btn = document.getElementById('toggle-theme');
+    if (btn) {
+        btn.textContent = body.classList.contains('dark') ? 'Tema claro' : 'Tema oscuro';
+    }
+}
+
+let studyQueue = [];
+let studyIndex = 0;
+
+function showStudyCard() {
+    const container = document.getElementById('study-container');
+    if (!container) return;
+    container.innerHTML = '';
+    if (studyIndex >= studyQueue.length) {
+        container.textContent = 'Fin del estudio';
+        return;
+    }
+    const card = studyQueue[studyIndex];
+    const front = document.createElement('div');
+    front.textContent = card.type === 'classic' ? card.question : card.statement;
+    const showBtn = document.createElement('button');
+    showBtn.textContent = 'Mostrar respuesta';
+    showBtn.addEventListener('click', () => {
+        showBtn.remove();
+        const back = document.createElement('div');
+        if (card.type === 'classic') {
+            back.textContent = card.answer;
+        } else {
+            back.textContent = card.isTrue ? 'Verdadero' : 'Falso';
+        }
+        container.appendChild(back);
+        const ok = document.createElement('button');
+        ok.textContent = 'Correcto';
+        ok.addEventListener('click', () => {
+            studyIndex++;
+            showStudyCard();
+        });
+        const fail = document.createElement('button');
+        fail.textContent = 'Incorrecto';
+        fail.addEventListener('click', () => {
+            studyQueue.push(card);
+            studyIndex++;
+            showStudyCard();
+        });
+        container.appendChild(ok);
+        container.appendChild(fail);
+    });
+    container.appendChild(front);
+    container.appendChild(showBtn);
+}
+
+function startStudyMode() {
+    const deck = document.getElementById('deck').value;
+    studyQueue = loadFlashcards().filter(c => c.deck === deck);
+    studyIndex = 0;
+    const container = document.getElementById('study-container');
+    if (container) {
+        container.classList.remove('hidden');
+    }
+    if (studyQueue.length === 0) {
+        container.textContent = 'Este mazo aún no tiene tarjetas';
+        return;
+    }
+    showStudyCard();
 }
 
 // Carga una tarjeta en el formulario para editarla
@@ -119,47 +189,50 @@ function renderList() {
     list.innerHTML = '';
     const cards = loadFlashcards();
 
+    if (cards.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'Este mazo aún no tiene tarjetas';
+        list.appendChild(li);
+    }
+
     cards.forEach((card, index) => {
         const li = document.createElement('li');
         li.className = 'flashcard';
 
-        const deckLabel = document.createElement('em');
-        deckLabel.textContent = 'Mazo: ' + card.deck;
-        li.appendChild(deckLabel);
-        li.appendChild(document.createElement('br'));
+        const inner = document.createElement('div');
+        inner.className = 'card-inner';
 
+        const front = document.createElement('div');
+        front.className = 'front';
+        front.innerHTML = `<em>Mazo: ${card.deck}</em><br>`;
         if (card.type === 'classic') {
-            const qLabel = document.createElement('strong');
-            qLabel.textContent = 'Pregunta:';
-            li.appendChild(qLabel);
-            li.appendChild(document.createTextNode(' ' + card.question));
-            li.appendChild(document.createElement('br'));
-
-            const aLabel = document.createElement('strong');
-            aLabel.textContent = 'Respuesta:';
-            li.appendChild(aLabel);
-            li.appendChild(document.createTextNode(' ' + card.answer));
+            front.innerHTML += `<strong>Pregunta:</strong> ${card.question}`;
         } else {
-            const sLabel = document.createElement('strong');
-            sLabel.textContent = 'Enunciado:';
-            li.appendChild(sLabel);
-            li.appendChild(document.createTextNode(' ' + card.statement));
-            li.appendChild(document.createElement('br'));
-
-            const tLabel = document.createElement('strong');
-            tLabel.textContent = 'Es verdadero:';
-            li.appendChild(tLabel);
-            li.appendChild(document.createTextNode(' ' + (card.isTrue ? 'Sí' : 'No')));
+            front.innerHTML += `<strong>Enunciado:</strong> ${card.statement}`;
         }
+
+        const back = document.createElement('div');
+        back.className = 'back';
+        if (card.type === 'classic') {
+            back.textContent = card.answer;
+        } else {
+            back.textContent = card.isTrue ? 'Verdadero' : 'Falso';
+        }
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        li.appendChild(inner);
+
+        li.addEventListener('click', () => li.classList.toggle('flipped'));
 
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Eliminar';
-        deleteBtn.addEventListener('click', () => deleteFlashcard(index));
+        deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteFlashcard(index); });
 
         const editBtn = document.createElement('button');
         editBtn.textContent = 'Editar';
         editBtn.style.marginLeft = '0.5rem';
-        editBtn.addEventListener('click', () => editFlashcard(index));
+        editBtn.addEventListener('click', (e) => { e.stopPropagation(); editFlashcard(index); });
 
         li.appendChild(document.createElement('br'));
         li.appendChild(deleteBtn);
@@ -181,9 +254,21 @@ function init() {
     if (addDeckBtn) {
         addDeckBtn.addEventListener('click', addDeck);
     }
+    const deleteDeckBtn = document.getElementById('delete-deck');
+    if (deleteDeckBtn) {
+        deleteDeckBtn.addEventListener('click', () => { deleteDeck(); renderList(); });
+    }
     const clearBtn = document.getElementById('clear-all');
     if (clearBtn) {
         clearBtn.addEventListener('click', clearAllFlashcards);
+    }
+    const themeBtn = document.getElementById('toggle-theme');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+    }
+    const studyBtn = document.getElementById('study-mode');
+    if (studyBtn) {
+        studyBtn.addEventListener('click', startStudyMode);
     }
     renderList();
 }
