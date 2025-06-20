@@ -67,6 +67,7 @@ function addFlashcard(event) {
     saveFlashcards(cards);
     renderList();
     event.target.reset();
+    document.getElementById('type').value = type; // mantener selección
     renderFields(type); // Reiniciar campos según tipo
 }
 
