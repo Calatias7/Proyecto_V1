@@ -26,6 +26,15 @@ npm start
 
 Esto iniciará `serve` sobre la carpeta actual. Abre el navegador en la dirección que indique la terminal para acceder a la app.
 
+## Uso
+
+1. Selecciona el tipo de tarjeta y completa los campos del formulario.
+2. Pulsa **Guardar tarjeta** para almacenarla.
+3. En cada tarjeta aparecerán los botones **Editar** y **Eliminar**:
+   - **Editar** carga la tarjeta en el formulario para modificarla; al guardar se reemplaza la versión anterior.
+   - **Eliminar** borra únicamente esa tarjeta de la lista.
+4. El botón **Eliminar todas** elimina todas las tarjetas guardadas en `localStorage`.
+
 ## Licencia
 
 Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
