@@ -8,6 +8,8 @@ Esta es una aplicación web sencilla para gestionar flashcards sin utilizar fram
 
 Las tarjetas se almacenan en `localStorage` para que persistan entre recargas del navegador.
 
+El diseño de la interfaz se ha refinado para ofrecer cartas y botones con un estilo elegante y minimalista.
+
 ## Estructura
 
 - `index.html` contiene la estructura básica de la página y el formulario.
