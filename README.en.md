@@ -18,14 +18,13 @@ Because the project uses ES Modules, you cannot open `index.html` directly.
 
 ## Installation
 
-Install dependencies and run the included server:
+Install Node.js and run the built-in server:
 
 ```bash
-npm install
 npm start
 ```
 
-This will launch `serve` on the current folder. Open the browser at the address shown in the terminal to use the app.
+No external dependencies are required. The command above starts a small server at `http://localhost:3000`.
 
 ## Usage
 
