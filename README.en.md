@@ -19,7 +19,7 @@ Alternatively you can start the included server with `npm start`.
 
 ## Installation
 
-Install Node.js and the project dependencies:
+Requires **Node.js 18 or higher**. Then install the project dependencies:
 
 ```bash
 npm install
