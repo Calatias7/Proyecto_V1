@@ -1,59 +1,5 @@
-// Utilidades para acceder a localStorage
-function loadFlashcards() {
-    const data = localStorage.getItem('flashcards');
-    if (!data) return [];
-    try {
-        return JSON.parse(data);
-    } catch (e) {
-        return [];
-    }
-}
-
-function saveFlashcards(cards) {
-    localStorage.setItem('flashcards', JSON.stringify(cards));
-}
-
-// Manejo de mazos (decks)
-function loadDecks() {
-    const data = localStorage.getItem('decks');
-    if (!data) return ['General'];
-    try {
-        const decks = JSON.parse(data);
-        return decks.length ? decks : ['General'];
-    } catch (e) {
-        return ['General'];
-    }
-}
-
-function saveDecks(decks) {
-    localStorage.setItem('decks', JSON.stringify(decks));
-}
-
-function renderDeckOptions() {
-    const select = document.getElementById('deck');
-    if (!select) return;
-    select.innerHTML = '';
-    loadDecks().forEach(d => {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
-        select.appendChild(opt);
-    });
-}
-
-function addDeck() {
-    const input = document.getElementById('new-deck');
-    const name = input.value.trim();
-    if (!name) return;
-    const decks = loadDecks();
-    if (!decks.includes(name)) {
-        decks.push(name);
-        saveDecks(decks);
-    }
-    input.value = '';
-    renderDeckOptions();
-    document.getElementById('deck').value = name;
-}
+import { loadFlashcards, saveFlashcards } from './storage.js';
+import { loadDecks, saveDecks, renderDeckOptions, addDeck } from './decks.js';
 
 // Índice de tarjeta en modo edición, null si se está creando una nueva
 let editingIndex = null;
@@ -100,18 +46,16 @@ function addFlashcard(event) {
     }
 
     if (editingIndex !== null) {
-        // Si estamos editando, reemplazamos la tarjeta existente
         cards[editingIndex] = card;
         editingIndex = null;
     } else {
-        // Si no, agregamos una nueva
         cards.push(card);
     }
     saveFlashcards(cards);
     renderList();
     event.target.reset();
-    document.getElementById('type').value = type; // mantener selección
-    renderFields(type); // Reiniciar campos según tipo
+    document.getElementById('type').value = type;
+    renderFields(type);
 }
 
 // Elimina una tarjeta por índice
@@ -143,7 +87,6 @@ function editFlashcard(index) {
     const card = cards[index];
     if (!card) return;
 
-    // Establece el tipo y dibuja los campos correspondientes
     const typeSelect = document.getElementById('type');
     typeSelect.value = card.type;
     renderFields(card.type);
@@ -167,7 +110,6 @@ function editFlashcard(index) {
         document.getElementById('isTrue').checked = card.isTrue;
     }
 
-    // Guardamos el índice en edición
     editingIndex = index;
 }
 
@@ -232,7 +174,7 @@ function renderList() {
 function init() {
     const typeSelect = document.getElementById('type');
     renderFields(typeSelect.value);
-    typeSelect.addEventListener('change', (e) => renderFields(e.target.value));
+    typeSelect.addEventListener('change', e => renderFields(e.target.value));
     document.getElementById('flashcard-form').addEventListener('submit', addFlashcard);
     renderDeckOptions();
     const addDeckBtn = document.getElementById('add-deck');
