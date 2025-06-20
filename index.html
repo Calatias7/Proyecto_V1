@@ -7,32 +7,56 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-brand">Flashcards App</div>
+        <button class="menu-toggle">☰</button>
+        <ul class="nav-links">
+            <li class="dropdown">
+                <a href="#" id="creation-btn">Creación</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" id="nav-create-card">Carta</a></li>
+                    <li><a href="#" id="nav-create-deck">Mazo</a></li>
+                </ul>
+            </li>
+            <li><a href="#" id="nav-view-decks">Ver Mazos</a></li>
+        </ul>
+        <button id="toggle-theme" type="button">Tema oscuro</button>
+    </nav>
+
     <div class="container">
-    <h1>Gestor de Flashcards</h1>
-    <button id="toggle-theme" type="button">Tema oscuro</button>
+        <section id="card-section" class="view">
+            <h2>Crear Tarjeta</h2>
+            <form id="flashcard-form">
+                <label for="type">Tipo de tarjeta:</label>
+                <select id="type" name="type">
+                    <option value="classic">Clásica</option>
+                    <option value="tf">Falso/Verdadero</option>
+                </select>
+                <label for="deck">Mazo:</label>
+                <select id="deck" name="deck"></select>
+                <div id="dynamic-fields"></div>
+                <button type="submit">Guardar tarjeta</button>
+            </form>
+        </section>
 
-    <form id="flashcard-form">
-        <label for="type">Tipo de tarjeta:</label>
-        <select id="type" name="type">
-            <option value="classic">Clásica</option>
-            <option value="tf">Falso/Verdadero</option>
-        </select>
-        <label for="deck">Mazo:</label>
-        <select id="deck" name="deck"></select>
-        <div class="new-deck">
-            <input type="text" id="new-deck" placeholder="Nuevo mazo">
-            <button type="button" id="add-deck">Añadir</button>
-            <button type="button" id="delete-deck">Eliminar mazo</button>
-        </div>
-        <div id="dynamic-fields"><!-- Campos dinámicos se insertarán aquí --></div>
-        <button type="submit">Guardar tarjeta</button>
-    </form>
+        <section id="deck-section" class="view hidden">
+            <h2>Gestionar Mazos</h2>
+            <label for="deck-manage">Mazo actual:</label>
+            <select id="deck-manage"></select>
+            <div class="new-deck">
+                <input type="text" id="new-deck" placeholder="Nuevo mazo">
+                <button type="button" id="add-deck">Añadir</button>
+                <button type="button" id="delete-deck">Eliminar mazo</button>
+            </div>
+        </section>
 
-    <h2>Listado de Flashcards</h2>
-    <button id="clear-all">Eliminar todas</button>
-    <button id="study-mode">Iniciar estudio</button>
-    <div id="flashcard-list"></div>
-    <div id="study-container" class="hidden"></div>
+        <section id="list-section" class="view hidden">
+            <h2>Mazos</h2>
+            <button id="clear-all">Eliminar todas</button>
+            <button id="study-mode">Iniciar estudio</button>
+            <div id="flashcard-list"></div>
+            <div id="study-container" class="hidden"></div>
+        </section>
     </div>
     <script type="module" src="src/app.js"></script>
 </body>

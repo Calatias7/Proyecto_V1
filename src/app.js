@@ -4,6 +4,63 @@ import { loadDecks, saveDecks, renderDeckOptions, addDeck, deleteDeck } from './
 // Índice de tarjeta en modo edición, null si se está creando una nueva
 let editingIndex = null;
 
+function ensureDefaultDeck() {
+    const data = localStorage.getItem('decks');
+    let save = false;
+    let decks;
+    if (!data) {
+        decks = ['General'];
+        save = true;
+    } else {
+        try {
+            decks = JSON.parse(data);
+            if (!decks.length) {
+                decks = ['General'];
+                save = true;
+            }
+        } catch (e) {
+            decks = ['General'];
+            save = true;
+        }
+    }
+    if (save) saveDecks(decks);
+}
+
+function updateDeckSelects() {
+    renderDeckOptions();
+    const manageSelect = document.getElementById('deck-manage');
+    const mainSelect = document.getElementById('deck');
+    if (manageSelect && mainSelect) {
+        manageSelect.innerHTML = mainSelect.innerHTML;
+        manageSelect.value = mainSelect.value;
+    }
+}
+
+function showSection(id) {
+    document.querySelectorAll('.view').forEach(s => s.classList.add('hidden'));
+    const section = document.getElementById(id);
+    if (section) section.classList.remove('hidden');
+    if (id === 'list-section') renderList();
+}
+
+function closeMobileMenu() {
+    const links = document.querySelector('.nav-links');
+    if (links) links.classList.remove('show');
+    const dropdown = document.querySelector('.dropdown');
+    if (dropdown) dropdown.classList.remove('open');
+}
+
+function initTheme() {
+    const stored = localStorage.getItem('theme');
+    if (stored === 'dark') {
+        document.body.classList.add('dark');
+    }
+    const btn = document.getElementById('toggle-theme');
+    if (btn) {
+        btn.textContent = document.body.classList.contains('dark') ? 'Tema claro' : 'Tema oscuro';
+    }
+}
+
 // Renderiza el formulario según el tipo de tarjeta seleccionado
 function renderFields(type) {
     const container = document.getElementById('dynamic-fields');
@@ -88,11 +145,12 @@ function updateClearButton() {
 
 function toggleTheme() {
     const body = document.body;
-    body.classList.toggle('dark');
+    const isDark = body.classList.toggle('dark');
     const btn = document.getElementById('toggle-theme');
     if (btn) {
-        btn.textContent = body.classList.contains('dark') ? 'Tema claro' : 'Tema oscuro';
+        btn.textContent = isDark ? 'Tema claro' : 'Tema oscuro';
     }
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
 let studyQueue = [];
@@ -287,22 +345,53 @@ function renderList() {
 
 // Configura eventos iniciales
 function init() {
+    ensureDefaultDeck();
+    initTheme();
     const typeSelect = document.getElementById('type');
     renderFields(typeSelect.value);
     typeSelect.addEventListener('change', e => renderFields(e.target.value));
     document.getElementById('flashcard-form').addEventListener('submit', addFlashcard);
-    renderDeckOptions();
+    updateDeckSelects();
+
+    const menuToggle = document.querySelector('.menu-toggle');
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            const links = document.querySelector('.nav-links');
+            if (links) links.classList.toggle('show');
+        });
+    }
+    const creationBtn = document.getElementById('creation-btn');
+    if (creationBtn) {
+        creationBtn.addEventListener('click', (e) => { e.preventDefault(); document.querySelector('.dropdown').classList.toggle('open'); });
+    }
+    const cardLink = document.getElementById('nav-create-card');
+    if (cardLink) {
+        cardLink.addEventListener('click', (e) => { e.preventDefault(); showSection('card-section'); closeMobileMenu(); });
+    }
+    const deckLink = document.getElementById('nav-create-deck');
+    if (deckLink) {
+        deckLink.addEventListener('click', (e) => { e.preventDefault(); showSection('deck-section'); closeMobileMenu(); });
+    }
+    const viewLink = document.getElementById('nav-view-decks');
+    if (viewLink) {
+        viewLink.addEventListener('click', (e) => { e.preventDefault(); showSection('list-section'); closeMobileMenu(); });
+    }
     const addDeckBtn = document.getElementById('add-deck');
     if (addDeckBtn) {
-        addDeckBtn.addEventListener('click', () => { addDeck(); updateClearButton(); });
+        addDeckBtn.addEventListener('click', () => { addDeck(); updateDeckSelects(); updateClearButton(); });
     }
     const deleteDeckBtn = document.getElementById('delete-deck');
     if (deleteDeckBtn) {
-        deleteDeckBtn.addEventListener('click', () => { deleteDeck(); renderList(); });
+        deleteDeckBtn.addEventListener('click', () => { deleteDeck(); updateDeckSelects(); renderList(); });
     }
     const deckSelect = document.getElementById('deck');
     if (deckSelect) {
         deckSelect.addEventListener('change', updateClearButton);
+        const manage = document.getElementById('deck-manage');
+        if (manage) {
+            deckSelect.addEventListener('change', () => { manage.value = deckSelect.value; });
+            manage.addEventListener('change', () => { deckSelect.value = manage.value; updateClearButton(); });
+        }
     }
     const clearBtn = document.getElementById('clear-all');
     if (clearBtn) {
@@ -316,6 +405,7 @@ function init() {
     if (studyBtn) {
         studyBtn.addEventListener('click', startStudyMode);
     }
+    showSection('card-section');
     renderList();
 }
 
