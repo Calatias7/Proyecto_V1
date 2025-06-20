@@ -69,8 +69,10 @@ function deleteFlashcard(index) {
 
 // Borra todas las tarjetas almacenadas
 function clearAllFlashcards() {
-    if (!confirm('¿Eliminar todas las tarjetas?')) return;
-    localStorage.removeItem('flashcards');
+    const deck = document.getElementById('deck').value;
+    if (!deck || !confirm(`¿Eliminar todas las tarjetas del mazo "${deck}"?`)) return;
+    const remaining = loadFlashcards().filter(c => c.deck !== deck);
+    saveFlashcards(remaining);
     renderList();
 }
 
@@ -78,7 +80,9 @@ function clearAllFlashcards() {
 function updateClearButton() {
     const btn = document.getElementById('clear-all');
     if (btn) {
-        btn.disabled = loadFlashcards().length === 0;
+        const deck = document.getElementById('deck').value;
+        const hasCards = loadFlashcards().some(c => c.deck === deck);
+        btn.disabled = !hasCards;
     }
 }
 
@@ -290,11 +294,15 @@ function init() {
     renderDeckOptions();
     const addDeckBtn = document.getElementById('add-deck');
     if (addDeckBtn) {
-        addDeckBtn.addEventListener('click', addDeck);
+        addDeckBtn.addEventListener('click', () => { addDeck(); updateClearButton(); });
     }
     const deleteDeckBtn = document.getElementById('delete-deck');
     if (deleteDeckBtn) {
         deleteDeckBtn.addEventListener('click', () => { deleteDeck(); renderList(); });
+    }
+    const deckSelect = document.getElementById('deck');
+    if (deckSelect) {
+        deckSelect.addEventListener('change', updateClearButton);
     }
     const clearBtn = document.getElementById('clear-all');
     if (clearBtn) {

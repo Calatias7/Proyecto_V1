@@ -35,7 +35,7 @@ This will launch `serve` on the current folder. Open the browser at the address 
 4. Each card shows **Edit** and **Delete** buttons:
    - **Edit** loads the card into the form so you can modify it.
    - **Delete** removes only that card from the list.
-5. The **Delete all** button removes every card stored in `localStorage`.
+5. The **Delete all** button removes only the cards from the selected deck.
 
 ## License
 
