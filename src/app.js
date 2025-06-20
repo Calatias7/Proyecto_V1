@@ -92,6 +92,30 @@ function renderFields(type) {
     }
 }
 
+// Muestra un mensaje temporal en la sección de tarjetas
+function showCardMessage(text) {
+    const msg = document.getElementById('card-message');
+    if (!msg) return;
+    msg.textContent = text;
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('hidden'), 2000);
+}
+
+// Limpia el formulario de tarjetas y reinicia el estado de edición
+function resetFlashcardForm(keepSelections = true) {
+    const form = document.getElementById('flashcard-form');
+    const type = document.getElementById('type').value;
+    const deck = document.getElementById('deck').value;
+    if (form) form.reset();
+    editingIndex = null;
+    if (keepSelections) {
+        document.getElementById('type').value = type;
+        document.getElementById('deck').value = deck;
+    }
+    renderFields(document.getElementById('type').value);
+    updateClearButton();
+}
+
 // Agrega una tarjeta nueva a la lista y guarda en localStorage
 function addFlashcard(event) {
     event.preventDefault();
@@ -128,10 +152,8 @@ function addFlashcard(event) {
     renderList();
     refreshCurrentDeckView();
     renderMazos();
-    event.target.reset();
-    document.getElementById('type').value = type;
-    document.getElementById('deck').value = deck;
-    renderFields(type);
+    resetFlashcardForm();
+    showCardMessage('Tarjeta guardada');
 }
 
 // Elimina una tarjeta por índice
@@ -479,7 +501,12 @@ function init() {
     }
     const cardLink = document.getElementById('nav-create-card');
     if (cardLink) {
-        cardLink.addEventListener('click', (e) => { e.preventDefault(); showSection('card-section'); closeMobileMenu(); });
+        cardLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('card-section');
+            resetFlashcardForm();
+            closeMobileMenu();
+        });
     }
     const deckLink = document.getElementById('nav-create-deck');
     if (deckLink) {

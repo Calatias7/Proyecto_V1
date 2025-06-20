@@ -311,3 +311,8 @@ button:hover {
     background-color: #ffcdd2;
 }
 
+#card-message {
+    margin-top: 0.5rem;
+    font-weight: bold;
+}
+
