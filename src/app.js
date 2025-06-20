@@ -301,45 +301,38 @@ function renderList() {
 
         deckCards.forEach(({ card, index }) => {
             const li = document.createElement('li');
-            li.className = 'flashcard';
 
-            const inner = document.createElement('div');
-            inner.className = 'card-inner';
+            const tarjeta = document.createElement('div');
+            tarjeta.className = 'tarjeta';
 
-            const front = document.createElement('div');
-            front.className = 'front';
+            const contenido = document.createElement('p');
+            contenido.className = 'contenido';
             if (card.type === 'classic') {
-                front.innerHTML = `<strong>Pregunta:</strong> ${card.question}`;
+                contenido.innerHTML = `<strong>Pregunta:</strong> ${card.question}<br><strong>Respuesta:</strong> ${card.answer}`;
             } else {
-                front.innerHTML = `<strong>Enunciado:</strong> ${card.statement}`;
+                const resp = card.isTrue ? 'Verdadero' : 'Falso';
+                contenido.innerHTML = `<strong>Enunciado:</strong> ${card.statement}<br><strong>Respuesta:</strong> ${resp}`;
             }
 
-            const back = document.createElement('div');
-            back.className = 'back';
-            if (card.type === 'classic') {
-                back.textContent = card.answer;
-            } else {
-                back.textContent = card.isTrue ? 'Verdadero' : 'Falso';
-            }
+            const botones = document.createElement('div');
+            botones.className = 'botones';
 
-            inner.appendChild(front);
-            inner.appendChild(back);
-            li.appendChild(inner);
-
-            li.addEventListener('click', () => li.classList.toggle('flipped'));
+            const editBtn = document.createElement('button');
+            editBtn.className = 'btn-editar';
+            editBtn.textContent = 'Editar';
+            editBtn.addEventListener('click', (e) => { e.stopPropagation(); editFlashcard(index); });
 
             const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'btn-eliminar';
             deleteBtn.textContent = 'Eliminar';
             deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteFlashcard(index); });
 
-            const editBtn = document.createElement('button');
-            editBtn.textContent = 'Editar';
-            editBtn.style.marginLeft = '0.5rem';
-            editBtn.addEventListener('click', (e) => { e.stopPropagation(); editFlashcard(index); });
+            botones.appendChild(editBtn);
+            botones.appendChild(deleteBtn);
 
-            li.appendChild(document.createElement('br'));
-            li.appendChild(deleteBtn);
-            li.appendChild(editBtn);
+            tarjeta.appendChild(contenido);
+            tarjeta.appendChild(botones);
+            li.appendChild(tarjeta);
             ul.appendChild(li);
         });
 
@@ -400,45 +393,38 @@ function mostrarTarjetasDelMazo(nombreDelMazo) {
 
     deckCards.forEach(({card,index})=>{
         const li = document.createElement('li');
-        li.className = 'flashcard';
 
-        const inner = document.createElement('div');
-        inner.className = 'card-inner';
+        const tarjeta = document.createElement('div');
+        tarjeta.className = 'tarjeta';
 
-        const front = document.createElement('div');
-        front.className = 'front';
+        const contenido = document.createElement('p');
+        contenido.className = 'contenido';
         if(card.type==='classic'){
-            front.innerHTML = `<strong>Pregunta:</strong> ${card.question}`;
+            contenido.innerHTML = `<strong>Pregunta:</strong> ${card.question}<br><strong>Respuesta:</strong> ${card.answer}`;
         } else {
-            front.innerHTML = `<strong>Enunciado:</strong> ${card.statement}`;
+            const resp = card.isTrue ? 'Verdadero' : 'Falso';
+            contenido.innerHTML = `<strong>Enunciado:</strong> ${card.statement}<br><strong>Respuesta:</strong> ${resp}`;
         }
 
-        const backFace = document.createElement('div');
-        backFace.className = 'back';
-        if(card.type==='classic'){
-            backFace.textContent = card.answer;
-        } else {
-            backFace.textContent = card.isTrue ? 'Verdadero' : 'Falso';
-        }
+        const botones = document.createElement('div');
+        botones.className = 'botones';
 
-        inner.appendChild(front);
-        inner.appendChild(backFace);
-        li.appendChild(inner);
-
-        li.addEventListener('click', () => li.classList.toggle('flipped'));
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn-editar';
+        editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', e => {e.stopPropagation(); editFlashcard(index); showSection('card-section');});
 
         const delBtn = document.createElement('button');
+        delBtn.className = 'btn-eliminar';
         delBtn.textContent = 'Eliminar';
         delBtn.addEventListener('click', e => {e.stopPropagation(); deleteFlashcard(index); mostrarTarjetasDelMazo(nombreDelMazo);});
 
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Editar';
-        editBtn.style.marginLeft = '0.5rem';
-        editBtn.addEventListener('click', e => {e.stopPropagation(); editFlashcard(index); showSection('card-section');});
+        botones.appendChild(editBtn);
+        botones.appendChild(delBtn);
 
-        li.appendChild(document.createElement('br'));
-        li.appendChild(delBtn);
-        li.appendChild(editBtn);
+        tarjeta.appendChild(contenido);
+        tarjeta.appendChild(botones);
+        li.appendChild(tarjeta);
         list.appendChild(li);
     });
 
