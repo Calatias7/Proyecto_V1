@@ -21,7 +21,8 @@ Si lo prefieres, también puedes iniciar un servidor local con `npm start`.
 
 ## Instalación
 
-Instala Node.js y las dependencias del proyecto:
+Requiere **Node.js 18 o superior**. Después instala las dependencias del proyecto:
+Instala las dependencias ejecutando:
 
 ```bash
 npm install

@@ -31,7 +31,8 @@ function logRequest(req) {
 
 async function handler(req, res) {
   logRequest(req);
-  const urlPath = decodeURIComponent(req.url === '/' ? '/index.html' : req.url);
+  const { pathname } = new URL(req.url, 'http://localhost');
+  const urlPath = decodeURIComponent(pathname === '/' ? '/index.html' : pathname);
   const safePath = resolve(join(root, '.' + urlPath));
   if (!safePath.startsWith(root)) {
     res.writeHead(403, securityHeaders);
