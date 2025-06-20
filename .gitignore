@@ -5,3 +5,5 @@ Thumbs.db
 # optional: log and temporary files
 *.log
 
+
+.idea/
