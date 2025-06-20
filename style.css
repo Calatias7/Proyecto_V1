@@ -170,6 +170,12 @@ button:hover {
     flex: 1;
 }
 
+.backup {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
 
 #flashcard-list {
     list-style-type: none;

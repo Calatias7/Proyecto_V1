@@ -56,6 +56,12 @@ npm test
    - **Eliminar** borra únicamente esa tarjeta de la lista.
 5. El botón **Eliminar todas** borra únicamente las tarjetas del mazo seleccionado.
 
+## Copias de seguridad
+
+En la sección de gestión de mazos dispones de los botones **Importar** y **Exportar**.
+**Exportar** descarga un archivo JSON con todos tus mazos y tarjetas, mientras que
+**Importar** permite restaurar esa información desde un archivo similar.
+
 ## Licencia
 
 Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
