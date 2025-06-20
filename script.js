@@ -80,6 +80,7 @@ function deleteFlashcard(index) {
 
 // Borra todas las tarjetas almacenadas
 function clearAllFlashcards() {
+    if (!confirm('¿Eliminar todas las tarjetas?')) return;
     localStorage.removeItem('flashcards');
     renderList();
 }
