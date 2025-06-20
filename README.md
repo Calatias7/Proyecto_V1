@@ -11,7 +11,7 @@ Las tarjetas se almacenan en `localStorage` para que persistan entre recargas de
 
 - `index.html` contiene la estructura básica de la página y el formulario.
 - `style.css` define el aspecto de la interfaz.
-- `script.js` implementa la lógica de creación, renderizado y eliminación de flashcards.
+- `src/app.js` contiene la lógica principal e importa los módulos de almacenamiento y mazos.
 
 Para probar la aplicación solo abre `index.html` en tu navegador.
 
