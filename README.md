@@ -21,14 +21,13 @@ Al usar módulos ES no es posible abrir `index.html` directamente.
 
 ## Instalación
 
-Instala las dependencias del proyecto y ejecuta el servidor incluido con los siguientes comandos:
+Instala Node.js y ejecuta el servidor integrado con:
 
 ```bash
-npm install
 npm start
 ```
 
-Esto iniciará `serve` sobre la carpeta actual. Abre el navegador en la dirección que indique la terminal para acceder a la app.
+El proyecto no requiere dependencias externas. El comando anterior iniciará un pequeño servidor en `http://localhost:3000`.
 
 ## Uso
 

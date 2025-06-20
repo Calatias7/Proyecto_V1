@@ -5,16 +5,6 @@ import { loadDecks, saveDecks, renderDeckOptions, addDeck, deleteDeck } from './
 let editingIndex = null;
 let currentDeckView = null;
 
-function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, ch => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-    }[ch] || ch));
-}
-
 function ensureDefaultDeck() {
     const data = localStorage.getItem('decks');
     let save = false;
@@ -299,6 +289,49 @@ function editFlashcard(index) {
     editingIndex = index;
 }
 
+function createCardElement(card, index, onEdit, onDelete) {
+    const li = document.createElement('li');
+
+    const tarjeta = document.createElement('div');
+    tarjeta.className = 'tarjeta';
+
+    const flash = document.createElement('div');
+    flash.className = 'flashcard';
+    const inner = document.createElement('div');
+    inner.className = 'card-inner';
+    const front = document.createElement('div');
+    front.className = 'front';
+    front.textContent = card.type === 'classic' ? card.question : card.statement;
+    const back = document.createElement('div');
+    back.className = 'back';
+    back.textContent = card.type === 'classic' ? card.answer : (card.isTrue ? 'Verdadero' : 'Falso');
+    inner.appendChild(front);
+    inner.appendChild(back);
+    flash.appendChild(inner);
+    flash.addEventListener('click', () => flash.classList.toggle('flipped'));
+
+    const botones = document.createElement('div');
+    botones.className = 'botones';
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn-editar';
+    editBtn.textContent = 'Editar';
+    editBtn.addEventListener('click', e => { e.stopPropagation(); onEdit(); });
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn-eliminar';
+    delBtn.textContent = 'Eliminar';
+    delBtn.addEventListener('click', e => { e.stopPropagation(); onDelete(); });
+
+    botones.appendChild(editBtn);
+    botones.appendChild(delBtn);
+
+    tarjeta.appendChild(flash);
+    tarjeta.appendChild(botones);
+    li.appendChild(tarjeta);
+    return li;
+}
+
 // Muestra todas las tarjetas en el listado
 function renderList() {
     const list = document.getElementById('flashcard-list');
@@ -336,45 +369,12 @@ function renderList() {
         }
 
         deckCards.forEach(({ card, index }) => {
-            const li = document.createElement('li');
-
-            const tarjeta = document.createElement('div');
-            tarjeta.className = 'tarjeta';
-
-            const flash = document.createElement('div');
-            flash.className = 'flashcard';
-            const inner = document.createElement('div');
-            inner.className = 'card-inner';
-            const front = document.createElement('div');
-            front.className = 'front';
-            front.textContent = card.type === 'classic' ? card.question : card.statement;
-            const back = document.createElement('div');
-            back.className = 'back';
-            back.textContent = card.type === 'classic' ? card.answer : (card.isTrue ? 'Verdadero' : 'Falso');
-            inner.appendChild(front);
-            inner.appendChild(back);
-            flash.appendChild(inner);
-            flash.addEventListener('click', () => flash.classList.toggle('flipped'));
-
-            const botones = document.createElement('div');
-            botones.className = 'botones';
-
-            const editBtn = document.createElement('button');
-            editBtn.className = 'btn-editar';
-            editBtn.textContent = 'Editar';
-            editBtn.addEventListener('click', (e) => { e.stopPropagation(); editFlashcard(index); });
-
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'btn-eliminar';
-            deleteBtn.textContent = 'Eliminar';
-            deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteFlashcard(index); });
-
-            botones.appendChild(editBtn);
-            botones.appendChild(deleteBtn);
-
-            tarjeta.appendChild(flash);
-            tarjeta.appendChild(botones);
-            li.appendChild(tarjeta);
+            const li = createCardElement(
+                card,
+                index,
+                () => editFlashcard(index),
+                () => deleteFlashcard(index)
+            );
             ul.appendChild(li);
         });
 
@@ -433,46 +433,13 @@ function mostrarTarjetasDelMazo(nombreDelMazo) {
         list.appendChild(li);
     }
 
-    deckCards.forEach(({card,index})=>{
-        const li = document.createElement('li');
-
-        const tarjeta = document.createElement('div');
-        tarjeta.className = 'tarjeta';
-
-        const flash = document.createElement('div');
-        flash.className = 'flashcard';
-        const inner = document.createElement('div');
-        inner.className = 'card-inner';
-        const front = document.createElement('div');
-        front.className = 'front';
-        front.textContent = card.type==='classic' ? card.question : card.statement;
-        const back = document.createElement('div');
-        back.className = 'back';
-        back.textContent = card.type==='classic' ? card.answer : (card.isTrue ? 'Verdadero' : 'Falso');
-        inner.appendChild(front);
-        inner.appendChild(back);
-        flash.appendChild(inner);
-        flash.addEventListener('click', ()=> flash.classList.toggle('flipped'));
-
-        const botones = document.createElement('div');
-        botones.className = 'botones';
-
-        const editBtn = document.createElement('button');
-        editBtn.className = 'btn-editar';
-        editBtn.textContent = 'Editar';
-        editBtn.addEventListener('click', e => {e.stopPropagation(); editFlashcard(index); showSection('card-section');});
-
-        const delBtn = document.createElement('button');
-        delBtn.className = 'btn-eliminar';
-        delBtn.textContent = 'Eliminar';
-        delBtn.addEventListener('click', e => {e.stopPropagation(); deleteFlashcard(index); mostrarTarjetasDelMazo(nombreDelMazo);});
-
-        botones.appendChild(editBtn);
-        botones.appendChild(delBtn);
-
-        tarjeta.appendChild(flash);
-        tarjeta.appendChild(botones);
-        li.appendChild(tarjeta);
+    deckCards.forEach(({card,index}) => {
+        const li = createCardElement(
+            card,
+            index,
+            () => { editFlashcard(index); showSection('card-section'); },
+            () => { deleteFlashcard(index); mostrarTarjetasDelMazo(nombreDelMazo); }
+        );
         list.appendChild(li);
     });
 
