@@ -47,6 +47,7 @@ function showSection(id) {
         const decks = document.getElementById('mazosContainer');
         if (decks) decks.classList.remove('hidden');
         renderMazos();
+        renderList();
     }
 }
 
