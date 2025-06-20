@@ -14,7 +14,7 @@ El diseño de la interfaz se ha refinado para ofrecer cartas y botones con un es
 
 - `index.html` contiene la estructura básica de la página y el formulario.
 - `style.css` define el aspecto de la interfaz.
-- `src/app.js` contiene la lógica principal e importa los módulos de almacenamiento y mazos.
+- `src/app.js` junto con `src/theme.js` y `src/study.js` contiene la lógica principal e importa los módulos de almacenamiento y mazos.
 
 Puedes ejecutar la aplicación abriendo directamente `index.html` en tu navegador.
 Si lo prefieres, también puedes iniciar un servidor local con `npm start`.
