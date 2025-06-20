@@ -2,6 +2,7 @@ import { initTheme, toggleTheme } from "./theme.js";
 import { startStudyMode } from "./study.js";
 import { loadFlashcards, saveFlashcards } from './storage.js';
 import { loadDecks, saveDecks, renderDeckOptions, addDeck, deleteDeck } from './decks.js';
+import { exportData, importData } from './backup.js';
 
 // Índice de tarjeta en modo edición, null si se está creando una nueva
 let editingIndex = null;
@@ -460,6 +461,43 @@ function init() {
     const themeBtn = document.getElementById('toggle-theme');
     if (themeBtn) {
         themeBtn.addEventListener('click', toggleTheme);
+    }
+    const exportBtn = document.getElementById('export-data');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            const blob = new Blob([exportData()], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'flashcards.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    }
+    const importBtn = document.getElementById('import-data');
+    if (importBtn) {
+        importBtn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.addEventListener('change', () => {
+                const file = input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    if (importData(reader.result)) {
+                        updateDeckSelects();
+                        renderList();
+                        renderMazos();
+                        showCardMessage('Datos importados');
+                    } else {
+                        alert('Archivo inválido');
+                    }
+                };
+                reader.readAsText(file);
+            });
+            input.click();
+        });
     }
     const studyBtn = document.getElementById('study-mode');
     if (studyBtn) {

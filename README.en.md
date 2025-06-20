@@ -53,6 +53,12 @@ npm test
    - **Delete** removes only that card from the list.
 5. The **Delete all** button removes only the cards from the selected deck.
 
+## Backups
+
+Inside the deck management section you will find **Import** and **Export** buttons.
+**Export** downloads a JSON file containing all your decks and cards, while
+**Import** restores that information from a similar file.
+
 ## License
 
 This project is distributed under the MIT license. See the `LICENSE` file for details.
