@@ -1,14 +1,14 @@
 {
   "name": "proyecto_v1",
   "version": "1.0.0",
-  "description": "Esta es una aplicación web sencilla para gestionar flashcards sin utilizar frameworks. Permite crear dos tipos de tarjetas:",
+  "description": "Aplicación web para gestionar flashcards agrupadas en mazos sin frameworks.",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Proyecto_V1 Team",
   "license": "MIT",
   "type": "module",
   "repository": {

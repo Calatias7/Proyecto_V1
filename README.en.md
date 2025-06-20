@@ -1,4 +1,5 @@
 # Proyecto_V1
+For the Spanish version see [README.md](README.md).
 
 This is a simple web application to manage flashcards without using frameworks. Cards are grouped into **decks** and two card types are supported:
 
@@ -18,13 +19,29 @@ Because the project uses ES Modules, you cannot open `index.html` directly.
 
 ## Installation
 
-Install Node.js and run the built-in server:
+Install Node.js and the project dependencies:
+
+```bash
+npm install
+```
+
+## Running the server
+
+Start the built-in server with:
 
 ```bash
 npm start
 ```
 
-No external dependencies are required. The command above starts a small server at `http://localhost:3000`.
+The server will be available at `http://localhost:3000`.
+
+## Running the tests
+
+Execute the test suite using Node.js:
+
+```bash
+npm test
+```
 
 ## Usage
 
@@ -42,4 +59,4 @@ This project is distributed under the MIT license. See the `LICENSE` file for de
 
 ## Contributing
 
-Contributions are welcome! If you find a problem or want to propose an improvement, open an issue or send a pull request following the standard GitHub workflow.
+Contributions are welcome! If you find a problem or want to propose an improvement, open an issue or send a pull request following the standard GitHub workflow. Please run `npm test` before submitting your changes.
