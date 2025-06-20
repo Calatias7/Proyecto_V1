@@ -36,7 +36,7 @@ Esto iniciará `serve` sobre la carpeta actual. Abre el navegador en la direcci�
 4. En cada tarjeta aparecerán los botones **Editar** y **Eliminar**:
    - **Editar** carga la tarjeta en el formulario para modificarla; al guardar se reemplaza la versión anterior.
    - **Eliminar** borra únicamente esa tarjeta de la lista.
-5. El botón **Eliminar todas** elimina todas las tarjetas guardadas en `localStorage`.
+5. El botón **Eliminar todas** borra únicamente las tarjetas del mazo seleccionado.
 
 ## Licencia
 
