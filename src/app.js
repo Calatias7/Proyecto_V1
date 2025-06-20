@@ -3,6 +3,7 @@ import { loadDecks, saveDecks, renderDeckOptions, addDeck, deleteDeck } from './
 
 // Índice de tarjeta en modo edición, null si se está creando una nueva
 let editingIndex = null;
+let currentDeckView = null;
 
 function ensureDefaultDeck() {
     const data = localStorage.getItem('decks');
@@ -40,7 +41,13 @@ function showSection(id) {
     document.querySelectorAll('.view').forEach(s => s.classList.add('hidden'));
     const section = document.getElementById(id);
     if (section) section.classList.remove('hidden');
-    if (id === 'list-section') renderList();
+    if (id === 'list-section') {
+        const cards = document.getElementById('tarjetasDelMazo');
+        if (cards) cards.classList.add('hidden');
+        const decks = document.getElementById('mazosContainer');
+        if (decks) decks.classList.remove('hidden');
+        renderMazos();
+    }
 }
 
 function closeMobileMenu() {
@@ -343,6 +350,102 @@ function renderList() {
     updateClearButton();
 }
 
+function renderMazos() {
+    const container = document.getElementById('mazosContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    loadDecks().forEach(deck => {
+        const card = document.createElement('div');
+        card.className = 'mazo-card';
+        card.textContent = deck;
+        card.addEventListener('click', () => mostrarTarjetasDelMazo(deck));
+        container.appendChild(card);
+    });
+}
+
+function mostrarTarjetasDelMazo(nombreDelMazo) {
+    currentDeckView = nombreDelMazo;
+    const decksContainer = document.getElementById('mazosContainer');
+    if (decksContainer) decksContainer.classList.add('hidden');
+
+    const container = document.getElementById('tarjetasDelMazo');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const back = document.createElement('button');
+    back.id = 'back-to-mazos';
+    back.textContent = 'Volver';
+    back.addEventListener('click', () => {
+        container.classList.add('hidden');
+        if (decksContainer) decksContainer.classList.remove('hidden');
+    });
+    container.appendChild(back);
+
+    const title = document.createElement('h3');
+    title.textContent = nombreDelMazo;
+    container.appendChild(title);
+
+    const list = document.createElement('ul');
+    list.className = 'deck-cards';
+
+    const allCards = loadFlashcards();
+    const deckCards = [];
+    allCards.forEach((c,i)=>{ if(c.deck===nombreDelMazo) deckCards.push({card:c,index:i});});
+
+    if (deckCards.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'Este mazo aún no contiene tarjetas';
+        list.appendChild(li);
+    }
+
+    deckCards.forEach(({card,index})=>{
+        const li = document.createElement('li');
+        li.className = 'flashcard';
+
+        const inner = document.createElement('div');
+        inner.className = 'card-inner';
+
+        const front = document.createElement('div');
+        front.className = 'front';
+        if(card.type==='classic'){
+            front.innerHTML = `<strong>Pregunta:</strong> ${card.question}`;
+        } else {
+            front.innerHTML = `<strong>Enunciado:</strong> ${card.statement}`;
+        }
+
+        const backFace = document.createElement('div');
+        backFace.className = 'back';
+        if(card.type==='classic'){
+            backFace.textContent = card.answer;
+        } else {
+            backFace.textContent = card.isTrue ? 'Verdadero' : 'Falso';
+        }
+
+        inner.appendChild(front);
+        inner.appendChild(backFace);
+        li.appendChild(inner);
+
+        li.addEventListener('click', () => li.classList.toggle('flipped'));
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Eliminar';
+        delBtn.addEventListener('click', e => {e.stopPropagation(); deleteFlashcard(index); mostrarTarjetasDelMazo(nombreDelMazo);});
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Editar';
+        editBtn.style.marginLeft = '0.5rem';
+        editBtn.addEventListener('click', e => {e.stopPropagation(); editFlashcard(index); showSection('card-section');});
+
+        li.appendChild(document.createElement('br'));
+        li.appendChild(delBtn);
+        li.appendChild(editBtn);
+        list.appendChild(li);
+    });
+
+    container.appendChild(list);
+    container.classList.remove('hidden');
+}
+
 // Configura eventos iniciales
 function init() {
     ensureDefaultDeck();
@@ -407,6 +510,7 @@ function init() {
     }
     showSection('card-section');
     renderList();
+    renderMazos();
 }
 
 document.addEventListener('DOMContentLoaded', init);
