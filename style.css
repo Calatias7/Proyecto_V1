@@ -30,19 +30,30 @@ button {
     cursor: pointer;
 }
 
+
 #flashcard-list {
     list-style-type: none;
     padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
 }
+
 
 .flashcard {
     background-color: #fff;
-    margin-bottom: 1rem;
+    margin: 0;
     padding: 1rem;
-    border-radius: 4px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
+
 .flashcard button {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
+    margin-right: 0.5rem;
 }
