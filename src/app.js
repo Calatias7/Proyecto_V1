@@ -5,6 +5,16 @@ import { loadDecks, saveDecks, renderDeckOptions, addDeck, deleteDeck } from './
 let editingIndex = null;
 let currentDeckView = null;
 
+function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[ch] || ch));
+}
+
 function ensureDefaultDeck() {
     const data = localStorage.getItem('decks');
     let save = false;
@@ -308,10 +318,13 @@ function renderList() {
             const contenido = document.createElement('p');
             contenido.className = 'contenido';
             if (card.type === 'classic') {
-                contenido.innerHTML = `<strong>Pregunta:</strong> ${card.question}<br><strong>Respuesta:</strong> ${card.answer}`;
+                const q = escapeHTML(card.question);
+                const a = escapeHTML(card.answer);
+                contenido.innerHTML = `<strong>Pregunta:</strong> ${q}<br><strong>Respuesta:</strong> ${a}`;
             } else {
                 const resp = card.isTrue ? 'Verdadero' : 'Falso';
-                contenido.innerHTML = `<strong>Enunciado:</strong> ${card.statement}<br><strong>Respuesta:</strong> ${resp}`;
+                const st = escapeHTML(card.statement);
+                contenido.innerHTML = `<strong>Enunciado:</strong> ${st}<br><strong>Respuesta:</strong> ${resp}`;
             }
 
             const botones = document.createElement('div');
@@ -400,10 +413,13 @@ function mostrarTarjetasDelMazo(nombreDelMazo) {
         const contenido = document.createElement('p');
         contenido.className = 'contenido';
         if(card.type==='classic'){
-            contenido.innerHTML = `<strong>Pregunta:</strong> ${card.question}<br><strong>Respuesta:</strong> ${card.answer}`;
+            const q = escapeHTML(card.question);
+            const a = escapeHTML(card.answer);
+            contenido.innerHTML = `<strong>Pregunta:</strong> ${q}<br><strong>Respuesta:</strong> ${a}`;
         } else {
             const resp = card.isTrue ? 'Verdadero' : 'Falso';
-            contenido.innerHTML = `<strong>Enunciado:</strong> ${card.statement}<br><strong>Respuesta:</strong> ${resp}`;
+            const st = escapeHTML(card.statement);
+            contenido.innerHTML = `<strong>Enunciado:</strong> ${st}<br><strong>Respuesta:</strong> ${resp}`;
         }
 
         const botones = document.createElement('div');
