@@ -103,6 +103,9 @@ function showStudyCard() {
         return;
     }
     const card = studyQueue[studyIndex];
+    const progress = document.createElement('p');
+    progress.textContent = `Tarjeta ${studyIndex + 1} de ${studyQueue.length}`;
+    container.appendChild(progress);
     const front = document.createElement('div');
     front.textContent = card.type === 'classic' ? card.question : card.statement;
     const showBtn = document.createElement('button');
@@ -119,12 +122,16 @@ function showStudyCard() {
         const ok = document.createElement('button');
         ok.textContent = 'Correcto';
         ok.addEventListener('click', () => {
+            container.classList.add('correct');
+            setTimeout(() => container.classList.remove('correct'), 300);
             studyIndex++;
             showStudyCard();
         });
         const fail = document.createElement('button');
         fail.textContent = 'Incorrecto';
         fail.addEventListener('click', () => {
+            container.classList.add('incorrect');
+            setTimeout(() => container.classList.remove('incorrect'), 300);
             studyQueue.push(card);
             studyIndex++;
             showStudyCard();
@@ -139,6 +146,10 @@ function showStudyCard() {
 function startStudyMode() {
     const deck = document.getElementById('deck').value;
     studyQueue = loadFlashcards().filter(c => c.deck === deck);
+    for (let i = studyQueue.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [studyQueue[i], studyQueue[j]] = [studyQueue[j], studyQueue[i]];
+    }
     studyIndex = 0;
     const container = document.getElementById('study-container');
     if (container) {
@@ -188,56 +199,83 @@ function renderList() {
     const list = document.getElementById('flashcard-list');
     list.innerHTML = '';
     const cards = loadFlashcards();
+    const decks = loadDecks();
 
     if (cards.length === 0) {
-        const li = document.createElement('li');
-        li.textContent = 'Este mazo aún no tiene tarjetas';
-        list.appendChild(li);
+        const p = document.createElement('p');
+        p.textContent = 'Este mazo aún no tiene tarjetas';
+        list.appendChild(p);
+        updateClearButton();
+        return;
     }
 
-    cards.forEach((card, index) => {
-        const li = document.createElement('li');
-        li.className = 'flashcard';
+    decks.forEach(deck => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'deck-container';
+        const title = document.createElement('h3');
+        title.textContent = deck;
+        wrapper.appendChild(title);
 
-        const inner = document.createElement('div');
-        inner.className = 'card-inner';
+        const ul = document.createElement('ul');
+        ul.className = 'deck-cards';
 
-        const front = document.createElement('div');
-        front.className = 'front';
-        front.innerHTML = `<em>Mazo: ${card.deck}</em><br>`;
-        if (card.type === 'classic') {
-            front.innerHTML += `<strong>Pregunta:</strong> ${card.question}`;
-        } else {
-            front.innerHTML += `<strong>Enunciado:</strong> ${card.statement}`;
+        const deckCards = [];
+        cards.forEach((card, i) => {
+            if (card.deck === deck) deckCards.push({ card, index: i });
+        });
+
+        if (deckCards.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'Este mazo aún no tiene tarjetas';
+            ul.appendChild(li);
         }
 
-        const back = document.createElement('div');
-        back.className = 'back';
-        if (card.type === 'classic') {
-            back.textContent = card.answer;
-        } else {
-            back.textContent = card.isTrue ? 'Verdadero' : 'Falso';
-        }
+        deckCards.forEach(({ card, index }) => {
+            const li = document.createElement('li');
+            li.className = 'flashcard';
 
-        inner.appendChild(front);
-        inner.appendChild(back);
-        li.appendChild(inner);
+            const inner = document.createElement('div');
+            inner.className = 'card-inner';
 
-        li.addEventListener('click', () => li.classList.toggle('flipped'));
+            const front = document.createElement('div');
+            front.className = 'front';
+            if (card.type === 'classic') {
+                front.innerHTML = `<strong>Pregunta:</strong> ${card.question}`;
+            } else {
+                front.innerHTML = `<strong>Enunciado:</strong> ${card.statement}`;
+            }
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Eliminar';
-        deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteFlashcard(index); });
+            const back = document.createElement('div');
+            back.className = 'back';
+            if (card.type === 'classic') {
+                back.textContent = card.answer;
+            } else {
+                back.textContent = card.isTrue ? 'Verdadero' : 'Falso';
+            }
 
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Editar';
-        editBtn.style.marginLeft = '0.5rem';
-        editBtn.addEventListener('click', (e) => { e.stopPropagation(); editFlashcard(index); });
+            inner.appendChild(front);
+            inner.appendChild(back);
+            li.appendChild(inner);
 
-        li.appendChild(document.createElement('br'));
-        li.appendChild(deleteBtn);
-        li.appendChild(editBtn);
-        list.appendChild(li);
+            li.addEventListener('click', () => li.classList.toggle('flipped'));
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Eliminar';
+            deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteFlashcard(index); });
+
+            const editBtn = document.createElement('button');
+            editBtn.textContent = 'Editar';
+            editBtn.style.marginLeft = '0.5rem';
+            editBtn.addEventListener('click', (e) => { e.stopPropagation(); editFlashcard(index); });
+
+            li.appendChild(document.createElement('br'));
+            li.appendChild(deleteBtn);
+            li.appendChild(editBtn);
+            ul.appendChild(li);
+        });
+
+        wrapper.appendChild(ul);
+        list.appendChild(wrapper);
     });
 
     updateClearButton();
