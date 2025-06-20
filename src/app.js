@@ -127,6 +127,7 @@ function addFlashcard(event) {
     }
     saveFlashcards(cards);
     renderList();
+    refreshCurrentDeckView();
     event.target.reset();
     document.getElementById('type').value = type;
     document.getElementById('deck').value = deck;
@@ -139,6 +140,7 @@ function deleteFlashcard(index) {
     cards.splice(index, 1);
     saveFlashcards(cards);
     renderList();
+    refreshCurrentDeckView();
 }
 
 // Borra todas las tarjetas almacenadas
@@ -148,6 +150,7 @@ function clearAllFlashcards() {
     const remaining = loadFlashcards().filter(c => c.deck !== deck);
     saveFlashcards(remaining);
     renderList();
+    refreshCurrentDeckView();
 }
 
 // Habilita o deshabilita el botón "Eliminar todas" según haya tarjetas
@@ -157,6 +160,14 @@ function updateClearButton() {
         const deck = document.getElementById('deck').value;
         const hasCards = loadFlashcards().some(c => c.deck === deck);
         btn.disabled = !hasCards;
+    }
+}
+
+function refreshCurrentDeckView() {
+    if (!currentDeckView) return;
+    const container = document.getElementById('tarjetasDelMazo');
+    if (container && !container.classList.contains('hidden')) {
+        mostrarTarjetasDelMazo(currentDeckView);
     }
 }
 
