@@ -13,6 +13,48 @@ function saveFlashcards(cards) {
     localStorage.setItem('flashcards', JSON.stringify(cards));
 }
 
+// Manejo de mazos (decks)
+function loadDecks() {
+    const data = localStorage.getItem('decks');
+    if (!data) return ['General'];
+    try {
+        const decks = JSON.parse(data);
+        return decks.length ? decks : ['General'];
+    } catch (e) {
+        return ['General'];
+    }
+}
+
+function saveDecks(decks) {
+    localStorage.setItem('decks', JSON.stringify(decks));
+}
+
+function renderDeckOptions() {
+    const select = document.getElementById('deck');
+    if (!select) return;
+    select.innerHTML = '';
+    loadDecks().forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        select.appendChild(opt);
+    });
+}
+
+function addDeck() {
+    const input = document.getElementById('new-deck');
+    const name = input.value.trim();
+    if (!name) return;
+    const decks = loadDecks();
+    if (!decks.includes(name)) {
+        decks.push(name);
+        saveDecks(decks);
+    }
+    input.value = '';
+    renderDeckOptions();
+    document.getElementById('deck').value = name;
+}
+
 // Índice de tarjeta en modo edición, null si se está creando una nueva
 let editingIndex = null;
 
@@ -43,17 +85,18 @@ function renderFields(type) {
 function addFlashcard(event) {
     event.preventDefault();
     const type = document.getElementById('type').value;
+    const deck = document.getElementById('deck').value;
     const cards = loadFlashcards();
     let card;
 
     if (type === 'classic') {
         const question = document.getElementById('question').value.trim();
         const answer = document.getElementById('answer').value.trim();
-        card = { type, question, answer };
+        card = { type, deck, question, answer };
     } else {
         const statement = document.getElementById('statement').value.trim();
         const isTrue = document.getElementById('isTrue').checked;
-        card = { type, statement, isTrue };
+        card = { type, deck, statement, isTrue };
     }
 
     if (editingIndex !== null) {
@@ -105,6 +148,17 @@ function editFlashcard(index) {
     typeSelect.value = card.type;
     renderFields(card.type);
 
+    const deckSelect = document.getElementById('deck');
+    if (deckSelect) {
+        if (!loadDecks().includes(card.deck)) {
+            const decks = loadDecks();
+            decks.push(card.deck);
+            saveDecks(decks);
+            renderDeckOptions();
+        }
+        deckSelect.value = card.deck;
+    }
+
     if (card.type === 'classic') {
         document.getElementById('question').value = card.question;
         document.getElementById('answer').value = card.answer;
@@ -126,6 +180,11 @@ function renderList() {
     cards.forEach((card, index) => {
         const li = document.createElement('li');
         li.className = 'flashcard';
+
+        const deckLabel = document.createElement('em');
+        deckLabel.textContent = 'Mazo: ' + card.deck;
+        li.appendChild(deckLabel);
+        li.appendChild(document.createElement('br'));
 
         if (card.type === 'classic') {
             const qLabel = document.createElement('strong');
@@ -175,6 +234,11 @@ function init() {
     renderFields(typeSelect.value);
     typeSelect.addEventListener('change', (e) => renderFields(e.target.value));
     document.getElementById('flashcard-form').addEventListener('submit', addFlashcard);
+    renderDeckOptions();
+    const addDeckBtn = document.getElementById('add-deck');
+    if (addDeckBtn) {
+        addDeckBtn.addEventListener('click', addDeck);
+    }
     const clearBtn = document.getElementById('clear-all');
     if (clearBtn) {
         clearBtn.addEventListener('click', clearAllFlashcards);

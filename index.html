@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
     <h1>Gestor de Flashcards</h1>
 
     <form id="flashcard-form">
@@ -15,6 +16,12 @@
             <option value="classic">Clásica</option>
             <option value="tf">Falso/Verdadero</option>
         </select>
+        <label for="deck">Mazo:</label>
+        <select id="deck" name="deck"></select>
+        <div class="new-deck">
+            <input type="text" id="new-deck" placeholder="Nuevo mazo">
+            <button type="button" id="add-deck">Añadir</button>
+        </div>
         <div id="dynamic-fields"><!-- Campos dinámicos se insertarán aquí --></div>
         <button type="submit">Guardar tarjeta</button>
     </form>
@@ -22,7 +29,7 @@
     <h2>Listado de Flashcards</h2>
     <button id="clear-all">Eliminar todas</button>
     <ul id="flashcard-list"></ul>
-
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

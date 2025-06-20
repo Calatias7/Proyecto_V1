@@ -1,6 +1,6 @@
 # Proyecto_V1
 
-Esta es una aplicación web sencilla para gestionar flashcards sin utilizar frameworks. Permite crear dos tipos de tarjetas:
+Esta es una aplicación web sencilla para gestionar flashcards sin utilizar frameworks. Ahora permite agrupar las tarjetas en **mazos** y crear dos tipos de tarjetas:
 
 - **Clásica**: contiene pregunta y respuesta.
 - **Falso/Verdadero**: contiene un enunciado y una marca que indica si es verdadero.
@@ -29,11 +29,12 @@ Esto iniciará `serve` sobre la carpeta actual. Abre el navegador en la direcci�
 ## Uso
 
 1. Selecciona el tipo de tarjeta y completa los campos del formulario.
-2. Pulsa **Guardar tarjeta** para almacenarla.
-3. En cada tarjeta aparecerán los botones **Editar** y **Eliminar**:
+2. Selecciona o crea un **mazo** para organizar tus tarjetas.
+3. Pulsa **Guardar tarjeta** para almacenarla.
+4. En cada tarjeta aparecerán los botones **Editar** y **Eliminar**:
    - **Editar** carga la tarjeta en el formulario para modificarla; al guardar se reemplaza la versión anterior.
    - **Eliminar** borra únicamente esa tarjeta de la lista.
-4. El botón **Eliminar todas** elimina todas las tarjetas guardadas en `localStorage`.
+5. El botón **Eliminar todas** elimina todas las tarjetas guardadas en `localStorage`.
 
 ## Licencia
 
