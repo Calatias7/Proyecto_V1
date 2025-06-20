@@ -311,6 +311,12 @@ function createCardElement(card, index, onEdit, onDelete) {
     flash.appendChild(inner);
     flash.addEventListener('click', () => flash.classList.toggle('flipped'));
 
+    // Ajusta la altura de la tarjeta para evitar que el texto se desborde
+    requestAnimationFrame(() => {
+        const maxHeight = Math.max(front.scrollHeight, back.scrollHeight, 120);
+        inner.style.height = `${maxHeight}px`;
+    });
+
     const botones = document.createElement('div');
     botones.className = 'botones';
 
@@ -414,6 +420,7 @@ function mostrarTarjetasDelMazo(nombreDelMazo) {
     back.addEventListener('click', () => {
         container.classList.add('hidden');
         if (decksContainer) decksContainer.classList.remove('hidden');
+        renderList();
     });
     container.appendChild(back);
 
@@ -446,6 +453,7 @@ function mostrarTarjetasDelMazo(nombreDelMazo) {
 
     container.appendChild(list);
     container.classList.remove('hidden');
+    renderList();
 }
 
 // Configura eventos iniciales
