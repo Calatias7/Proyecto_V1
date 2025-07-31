@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS inventario_db;
+USE inventario_db;
+
+CREATE TABLE IF NOT EXISTS productos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    cantidad INT NOT NULL DEFAULT 0,
+    precio DECIMAL(10,2) NOT NULL DEFAULT 0
+);

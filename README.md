@@ -61,6 +61,9 @@ npm test
 En la sección de gestión de mazos dispones de los botones **Importar** y **Exportar**.
 **Exportar** descarga un archivo JSON con todos tus mazos y tarjetas, mientras que
 **Importar** permite restaurar esa información desde un archivo similar.
+## Sistema de Inventario (PHP)
+
+Consulta la carpeta `inventory` para un ejemplo basico de gestion de productos con PHP y MySQL. Ejecuta `schema.sql` en tu servidor MySQL y abre `index.php` desde XAMPP.
 
 ## Licencia
 
