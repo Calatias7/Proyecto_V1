@@ -63,7 +63,15 @@ En la sección de gestión de mazos dispones de los botones **Importar** y **Exp
 **Importar** permite restaurar esa información desde un archivo similar.
 ## Sistema de Inventario (PHP)
 
-Consulta la carpeta `inventory` para un ejemplo basico de gestion de productos con PHP y MySQL. Ejecuta `schema.sql` en tu servidor MySQL y abre `index.php` desde XAMPP.
+En la carpeta `inventory` encontrarás un sistema sencillo para administrar el stock de una tienda utilizando **PHP**, **MySQL** y un poco de **JavaScript**.
+Para ponerlo en marcha sigue estos pasos:
+
+1. Copia la carpeta en `htdocs` de tu instalación de **XAMPP**.
+2. Importa `schema.sql` en MySQL para crear la base de datos `inventario_db`.
+3. Ajusta las credenciales en `db.php` si fuera necesario.
+4. Abre `http://localhost/inventory/index.php` desde tu navegador.
+
+La página principal permite agregar, editar y eliminar productos. Incluye un campo de búsqueda para filtrar la lista y confirmaciones de eliminación implementadas en JavaScript.
 
 ## Licencia
 

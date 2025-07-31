@@ -7,6 +7,11 @@ table {
     width: 100%;
     margin-top: 10px;
 }
+#search {
+    margin-top: 10px;
+    padding: 6px;
+    width: 50%;
+}
 th, td {
     border: 1px solid #ccc;
     padding: 8px;
