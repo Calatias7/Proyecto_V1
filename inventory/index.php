@@ -27,7 +27,8 @@ $products = fetch_products($mysqli);
     </form>
 
     <h2>Lista de Productos</h2>
-    <table>
+    <input type="text" id="search" placeholder="Buscar por nombre...">
+    <table id="product-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -46,11 +47,12 @@ $products = fetch_products($mysqli);
                 <td><?php echo $p['precio']; ?></td>
                 <td>
                     <a href="edit.php?id=<?php echo $p['id']; ?>">Editar</a>
-                    <a href="delete_product.php?id=<?php echo $p['id']; ?>" onclick="return confirm('¿Eliminar?');">Eliminar</a>
+                    <a class="delete-link" href="delete_product.php?id=<?php echo $p['id']; ?>">Eliminar</a>
                 </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
+    <script src="script.js"></script>
 </body>
 </html>
